@@ -181,6 +181,24 @@ const Weather = () => {
     }
   };
 
+  const handleSubmit = (event) => {
+    // function for handling the search in the phone, because in phone users can't press enter, so pressing search icon will trigger search
+    event.preventDefault(); // preventing form from submitting
+    const searchValue =
+      selectedOptionRef.current && selectedOptionRef.current.label
+        ? selectedOptionRef.current.label
+        : location?.label;
+
+    console.log(`Search value found - ${searchValue}`);
+    if (searchValue) {
+      handleWeatherSearch(searchValue);
+    } else {
+      console.log("Please enter something to search weather data for.");
+      setSnackbarMessage1(`Please enter something to search weather data for`);
+      setSnackbarOpen1(true);
+    }
+  };
+
   // The rendering part of the Weather component
   return (
     <div
@@ -275,8 +293,8 @@ const Weather = () => {
             {isLocationBlocked && (
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Location access is currently blocked. Please enable location
-                access in your browser settings and reload the page to view weather data for your
-                current location.
+                access in your browser settings and reload the page to view
+                weather data for your current location.
               </Typography>
             )}
           </Paper>
@@ -301,7 +319,7 @@ const Weather = () => {
                     backgroundImage: `url(${setBackgroundImage()})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
-                    height: '88vh'
+                    height: "88vh",
                   }}
                 >
                   <CardContent
@@ -414,52 +432,54 @@ const Weather = () => {
                           width: "100%", // Take up full width of its container
                         }}
                       >
-                        <Autocomplete
-                          freeSolo
-                          disableClearable
-                          options={options?.map((option) => {
-                            return option;
-                          })}
-                          getOptionLabel={(option) =>
-                            typeof option === "string"
-                              ? option
-                              : option.label || ""
-                          }
-                          onInputChange={handleInputChange}
-                          onChange={handleOptionsChange}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Search Location"
-                              margin="normal"
-                              variant="outlined"
-                              fullWidth
-                              InputProps={{
-                                ...params.InputProps,
-                                type: "search",
-                                style: {
-                                  fontSize: "1rem",
-                                  color: "white",
-                                  backgroundColor: "black",
-                                },
-                              }}
-                              InputLabelProps={{
-                                style: {
-                                  fontSize: "1rem",
-                                  backgroundColor: "black",
-                                  color: "white",
-                                },
-                              }}
-                              style={{
-                                width: "100%",
-                                maxWidth: "100%",
-                                fontSize: "1.25rem",
-                              }}
-                              onKeyDown={handleKeyDown}
-                            />
-                          )}
-                          sx={{ width: "60%" }}
-                        />
+                        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+                          <Autocomplete
+                            freeSolo
+                            disableClearable
+                            options={options?.map((option) => {
+                              return option;
+                            })}
+                            getOptionLabel={(option) =>
+                              typeof option === "string"
+                                ? option
+                                : option.label || ""
+                            }
+                            onInputChange={handleInputChange}
+                            onChange={handleOptionsChange}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Search Location"
+                                margin="normal"
+                                variant="outlined"
+                                fullWidth
+                                InputProps={{
+                                  ...params.InputProps,
+                                  type: "search",
+                                  style: {
+                                    fontSize: "1rem",
+                                    color: "white",
+                                    backgroundColor: "black",
+                                  },
+                                }}
+                                InputLabelProps={{
+                                  style: {
+                                    fontSize: "1rem",
+                                    backgroundColor: "black",
+                                    color: "white",
+                                  },
+                                }}
+                                style={{
+                                  width: "100%",
+                                  maxWidth: "100%",
+                                  fontSize: "1.25rem",
+                                }}
+                                onKeyDown={handleKeyDown}
+                              />
+                            )}
+                            sx={{ width: "60%", margin: "0 auto"}}
+                          />
+                        </form>
                       </Box>
                     </Grid>
 
@@ -542,7 +562,7 @@ const Weather = () => {
                             )}`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6} sx= {{mb: 3}}>
+                        <Grid item xs={6} sm={6} sx={{ mb: 3 }}>
                           <WeatherElementBox
                             icon={WbTwilight}
                             label="Sunset"
