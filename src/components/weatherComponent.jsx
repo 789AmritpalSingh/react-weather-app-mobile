@@ -54,7 +54,7 @@ const Weather = () => {
   const isSmallScreen = useMediaQuery("(max-width: 600px)"); // Corrected media query
   const [isLocationAllowed, setIsLocationAllowed] = useState(false); // Hook to store if user allowed location access or not
   const [isLocationBlocked, setIsLocationBlocked] = useState(false); // Hook to manage the status of the location blocking.
-  const isMobile = useMediaQuery('(max-width:600px)'); //  for mobile screens
+  const isMobile = useMediaQuery('(max-width:800px)'); //  for mobile screens
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyAOCA-NU2T7UXdvE3rImCaN63P_vRGr368",

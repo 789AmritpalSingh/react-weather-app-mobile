@@ -5,7 +5,7 @@ const API_KEY = '2e10c98182ed4cd10e0b48369322f4f8';
 
 export const fetchCoordsByCity = async (location) => {
     // Fetching Coordinates of city i.e. longitude and latitude and using them later to get the weather of the city.
-    const geoLocationUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${location}&appid=${API_KEY}`;
+    const geoLocationUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${location}&appid=${API_KEY}`;
     const response = await fetch(geoLocationUrl);
     return await response.json();
 };
