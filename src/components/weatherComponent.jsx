@@ -54,7 +54,7 @@ const Weather = () => {
   const isSmallScreen = useMediaQuery("(max-width: 600px)"); // Corrected media query
   const [isLocationAllowed, setIsLocationAllowed] = useState(false); // Hook to store if user allowed location access or not
   const [isLocationBlocked, setIsLocationBlocked] = useState(false); // Hook to manage the status of the location blocking.
-  const isMobile = useMediaQuery('(max-width:800px)'); //  for mobile screens
+  const isMobile = useMediaQuery("(max-width:800px)"); //  for mobile screens
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyAOCA-NU2T7UXdvE3rImCaN63P_vRGr368",
@@ -114,7 +114,7 @@ const Weather = () => {
       );
       setSnackbarOpen(true);
     }
-    console.log('Setting the location as null')
+    console.log("Setting the location as null");
     setLocation(null); // Clearing the text field after hitting enter.
   };
 
@@ -188,7 +188,7 @@ const Weather = () => {
 
   const handleSubmit = (event) => {
     // function for handling the search in the phone, because in phone users can't press enter, so pressing search icon will trigger search
-    console.log('Handle submit called.')
+    console.log("Handle submit called.");
     event.preventDefault(); // preventing form from submitting
     const searchValue =
       selectedOptionRef.current && selectedOptionRef.current.label
@@ -312,10 +312,10 @@ const Weather = () => {
           justifyContent="center"
           alignItems="center"
           minHeight="100vh"
-          flexDirection={isMobile ? 'column' : 'row'} // If the screen width is less than 600 px means most probably a mobile than card are held upside down i.e. vertically else horizontally
+          flexDirection="column"
         >
           <Container maxWidth="lg">
-            <Grid container spacing={2}>
+            <Grid container spacing={2} direction={isMobile ? "column" : "row"}>
               <Grid item xs={12} md={6}>
                 <Card
                   sx={{
@@ -326,7 +326,8 @@ const Weather = () => {
                     backgroundImage: `url(${setBackgroundImage()})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
-                    height: isMobile ? 'auto' : '88vh',
+                    height: isMobile ? "auto" : "88vh",
+                    mb: isMobile ? 2 : 0,
                   }}
                 >
                   <CardContent
@@ -391,7 +392,7 @@ const Weather = () => {
                     mb: 3,
                     background: "#333",
                     height: "88vh",
-                    height: isMobile ? 'auto' : '88vh',
+                    height: isMobile ? "auto" : "88vh",
                     overflowY: "auto",
                   }}
                 >
