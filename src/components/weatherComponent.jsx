@@ -391,7 +391,6 @@ const Weather = () => {
                     mt: 3,
                     mb: 3,
                     background: "#333",
-                    height: "88vh",
                     height: isMobile ? "auto" : "88vh",
                     overflowY: "auto",
                   }}
