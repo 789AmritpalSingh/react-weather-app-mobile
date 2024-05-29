@@ -33,7 +33,7 @@ const timeZoneMapping = {
 
 const DigitalClock = ({ timeZone }) => {
   const [time, setTime] = useState(new Date());
-  const isSmallScreen = useMediaQuery("(max-width: 600px)"); // Corrected media query
+  const isSmallScreen = useMediaQuery("(max-width: 800px)"); // Corrected media query
 
   useEffect(() => {
     const timerId = setInterval(() => {

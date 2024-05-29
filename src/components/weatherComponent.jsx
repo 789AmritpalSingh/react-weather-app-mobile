@@ -51,7 +51,6 @@ const Weather = () => {
   const [snackbarOpen1, setSnackbarOpen1] = useState(false); // initially setting the snackbar as to be closed.
   const [snackbarMessage1, setSnackbarMessage1] = useState("");
   const selectedOptionRef = useRef(null); // Ref hook to store the selected option
-  const isSmallScreen = useMediaQuery("(max-width: 600px)"); // Corrected media query
   const [isLocationAllowed, setIsLocationAllowed] = useState(false); // Hook to store if user allowed location access or not
   const [isLocationBlocked, setIsLocationBlocked] = useState(false); // Hook to manage the status of the location blocking.
   const isMobile = useMediaQuery('(max-width:800px)'); //  for mobile screens
@@ -320,14 +319,15 @@ const Weather = () => {
                 <Card
                   sx={{
                     opacity: 1,
-                    padding: "20px",
+                    padding: isMobile ? "10px" : "20px",
                     mt: 3,
                     background: "black",
                     backgroundImage: `url(${setBackgroundImage()})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
-                    height: isMobile ? "auto" : "88vh",
-                    mb: isMobile ? 2 : 0,
+                    height: isMobile ? "auto" : "88vh", // Ensure both cards have the same height
+                    mb: isMobile ? 1 : 0,
+                    flex: isMobile ? 1 : "none", // Ensure it takes up equal height in mobile view
                   }}
                 >
                   <CardContent
@@ -370,8 +370,8 @@ const Weather = () => {
                           sx={{
                             color: "white",
                             textAlign: "right",
-                            mr: 2,
-                            fontSize: isSmallScreen
+                            mr: isMobile ? 1 : 2,
+                            fontSize: isMobile
                               ? "2rem !important"
                               : "3rem !important", // Adjust font size based on screen size
                           }}
@@ -392,7 +392,7 @@ const Weather = () => {
                     mb: 3,
                     background: "#333",
                     height: isMobile ? "auto" : "88vh",
-                    overflowY: "auto",
+                    overflowY: isMobile ? "scroll" : "auto", // Ensure scrolling on mobile view
                   }}
                 >
                   <CardContent
@@ -491,28 +491,28 @@ const Weather = () => {
                               onKeyDown={handleKeyDown}
                             />
                           )}
-                          sx={{ width: "70%" }}
+                          sx={{ width: isMobile ? "90%" : "70%"}}
                         />
                       </Box>
                     </Grid>
 
                     {parsedWeatherData && (
                       <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={6} sm={6}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={ThermostatAutoIcon}
                             label="Feels like"
                             value={`${parsedWeatherData.main.feels_like}°C`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={Compress}
                             label="Pressure"
                             value={`${parsedWeatherData.main.pressure} hpa`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={() => (
                               <ThermostatIcon
@@ -523,7 +523,7 @@ const Weather = () => {
                             value={`${parsedWeatherData.main.temp_min}°C`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={() => (
                               <ThermostatIcon
@@ -534,14 +534,14 @@ const Weather = () => {
                             value={`${parsedWeatherData.main.temp_max}°C`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={WaterDropIcon}
                             label="Humidity"
                             value={`${parsedWeatherData.main.humidity}%`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={WindPowerIcon}
                             label="Wind Speed"
@@ -550,7 +550,7 @@ const Weather = () => {
                             ).toFixed()} km/h`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={Loop}
                             label="Wind Direction"
@@ -559,14 +559,14 @@ const Weather = () => {
                             )}`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={VisibilityIcon}
                             label="Visibility"
                             value={`${parsedWeatherData.visibility}m`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={Brightness7}
                             label="Sunrise"
@@ -575,7 +575,7 @@ const Weather = () => {
                             )}`}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={6} sx={{ mb: 3 }}>
+                        <Grid item xs={12} sm={6} md={6} sx={{ mb: 3 }}>
                           <WeatherElementBox
                             icon={WbTwilight}
                             label="Sunset"
