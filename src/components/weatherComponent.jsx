@@ -5,8 +5,10 @@ import {
   Alert,
   Autocomplete,
   Box,
+  Button,
   Card,
   CardContent,
+  Collapse,
   Container,
   Grid,
   IconButton,
@@ -53,7 +55,8 @@ const Weather = () => {
   const selectedOptionRef = useRef(null); // Ref hook to store the selected option
   const [isLocationAllowed, setIsLocationAllowed] = useState(false); // Hook to store if user allowed location access or not
   const [isLocationBlocked, setIsLocationBlocked] = useState(false); // Hook to manage the status of the location blocking.
-  const isMobile = useMediaQuery('(max-width:800px)'); //  for mobile screens
+  const isMobile = useMediaQuery("(max-width:800px)"); //  for mobile screens
+  const [showMoreDetails, setShowMoreDetails] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyAOCA-NU2T7UXdvE3rImCaN63P_vRGr368",
@@ -204,7 +207,6 @@ const Weather = () => {
     }
   };
 
-  // The rendering part of the Weather component
   return (
     <div
       style={{
@@ -221,7 +223,7 @@ const Weather = () => {
         onClose={() => {
           setSnackbarOpen(false);
         }}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }} // Positioning the snackbar to top center
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
           onClose={() => {
@@ -229,13 +231,20 @@ const Weather = () => {
           }}
           severity="error"
           sx={{
-            width: "100%",
+            width: isMobile ? "100%" : "70%",
             backgroundColor: "red",
             color: "white",
-            fontSize: "1.2rem",
+            fontSize: isMobile ? "1.2rem" : "1rem",
           }}
           iconMapping={{
-            error: <ErrorIcon style={{ color: "white", fontSize: "2rem" }} />, // Customizing the error icon color
+            error: (
+              <ErrorIcon
+                style={{
+                  color: "white",
+                  fontSize: isMobile ? "2rem" : "1.5rem",
+                }}
+              />
+            ),
           }}
         >
           {snackbarMessage}
@@ -247,7 +256,7 @@ const Weather = () => {
         onClose={() => {
           setSnackbarOpen1(false);
         }}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }} // Positioning the snackbar to top center
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
           onClose={() => {
@@ -255,13 +264,20 @@ const Weather = () => {
           }}
           severity="error"
           sx={{
-            width: "100%",
+            width: isMobile ? "100%" : "70%",
             backgroundColor: "red",
             color: "white",
-            fontSize: "1.2rem",
+            fontSize: isMobile ? "1.2rem" : "1rem",
           }}
           iconMapping={{
-            error: <ErrorIcon style={{ color: "white", fontSize: "2rem" }} />, // Customizing the error icon color
+            error: (
+              <ErrorIcon
+                style={{
+                  color: "white",
+                  fontSize: isMobile ? "2rem" : "1.5rem",
+                }}
+              />
+            ),
           }}
         >
           {snackbarMessage1}
@@ -283,7 +299,7 @@ const Weather = () => {
               padding: "20px",
               backgroundColor: "rgba(0, 0, 0, 0.9)",
               color: "white",
-              width: "300px", // Set specific width
+              width: "300px",
             }}
           >
             <img
@@ -314,242 +330,246 @@ const Weather = () => {
           flexDirection="column"
         >
           <Container maxWidth="lg">
-            <Grid container spacing={2} direction={isMobile ? "column" : "row"}>
-              <Grid item xs={12} md={6}>
-                <Card
+            <Card
+              sx={{
+                opacity: 1,
+                padding: "20px",
+                mt: 3,
+                backgroundColor: "rgba(50, 50, 50, 0.8)", // Overall gray background with opacity
+                height: "auto",
+                mb: 1,
+                maxHeight: "90vh", // Limit height to make it scrollable
+                overflowY: "auto", // Enable vertical scrolling
+              }}
+            >
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  height: "100%",
+                }}
+              >
+                <Box
                   sx={{
-                    opacity: 1,
-                    padding: isMobile ? "10px" : "20px",
-                    mt: 3,
-                    background: "black",
-                    backgroundImage: `url(${setBackgroundImage()})`,
+                    display: "flex",
+                    flexDirection: "column",
+                    textAlign: "center",
+                    backgroundImage: `url(${setBackgroundImage()})`, // Background image for the top section
                     backgroundSize: "cover",
                     backgroundPosition: "center",
-                    height: isMobile ? "auto" : "88vh", // Ensure both cards have the same height
-                    mb: isMobile ? 1 : 0,
-                    flex: isMobile ? 1 : "none", // Ensure it takes up equal height in mobile view
+                    padding: "20px",
+                    borderRadius: "12px",
+                    mb: isMobile ? 0 : 1, // Margin bottom to separate from other sections
+                    position: "relative", // To allow absolute positioning of child elements
                   }}
                 >
-                  <CardContent
+                  <Box
                     sx={{
                       display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between", // Ensures the footer sticks to the bottom
-                      height: "100%", // Takes full height of the card
+                      justifyContent: "space-between",
+                      width: "100%",
+                      mt: 2,
+                      position: "relative",
                     }}
                   >
-                    <Typography
-                      variant="h3"
-                      component="h2"
-                      sx={{ color: "white", mt: 2, textAlign: "right" }}
-                    >
-                      {parsedWeatherData?.name}
-                    </Typography>
-                    <Typography
-                      variant="h4"
-                      component="h2"
-                      sx={{ color: "white", textAlign: "right" }}
-                    >
-                      {parsedWeatherData?.sys.country}
-                    </Typography>
-                    {/* Footer for clock and temperature */}
                     <Box
                       sx={{
-                        mt: "auto",
-                        p: 2,
                         display: "flex",
-                        justifyContent: "space-between",
-                        width: "100%",
+                        alignItems: "flex-start", // Adjust alignment to move the description up
+                        mt: 2
                       }}
                     >
-                      <DigitalClock timeZone={parsedWeatherData?.timezone} />
-                      {parsedWeatherData && (
-                        <Typography
-                          variant="h3"
-                          component="h2"
-                          sx={{
-                            color: "white",
-                            textAlign: "right",
-                            mr: isMobile ? 1 : 2,
-                            fontSize: isMobile
-                              ? "2rem !important"
-                              : "3rem !important", // Adjust font size based on screen size
-                          }}
-                        >
-                          {parsedWeatherData.main.temp}°c
-                        </Typography>
-                      )}
+                      <Typography
+                        variant="body3"
+                        sx={{
+                          color: "white",
+                          mr: 2,
+                          fontSize: isMobile ? "1.2rem" : '2rem',
+                        }}
+                      >
+                        {parsedWeatherData.weather[0].description.toUpperCase()}
+                      </Typography>
                     </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Card
-                  sx={{
-                    opacity: 0.9,
-                    padding: "20px",
-                    mt: 3,
-                    mb: 3,
-                    background: "#333",
-                    height: isMobile ? "auto" : "88vh",
-                    overflowY: isMobile ? "scroll" : "auto", // Ensure scrolling on mobile view
-                  }}
-                >
-                  <CardContent
+                    <Box
+                      sx={{
+                        top: "20px",
+                        right: "20px",
+                        textAlign: "right",
+                        mb: isMobile ? 2 : 5,
+                      }}
+                    >
+                      <Typography
+                        variant={isMobile ? "h4" : "h3"}
+                        component="h2"
+                        sx={{ color: "white" }}
+                      >
+                        {parsedWeatherData?.name}
+                      </Typography>
+                      <Typography
+                        variant={isMobile ? "h5" : "h4"}
+                        component="h2"
+                        sx={{ color: "white" }}
+                      >
+                        {parsedWeatherData?.sys.country}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box
                     sx={{
                       display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between", // Ensures the footer sticks to the bottom
-                      height: "100%", // Takes full height of the card
+                      justifyContent: "space-between",
+                      width: "100%",
+                      mt: 2,
+                      position: "relative",
                     }}
                   >
+                    <DigitalClock timeZone={parsedWeatherData?.timezone} />
                     {parsedWeatherData && (
-                      <Box
+                      <Typography
+                        variant="h3"
+                        component="h2"
                         sx={{
-                          alignItems: "center",
-                          backgroundColor: "rgba(0, 0, 0, 0.7)",
-                          boxShadow: 3,
-                          display: "flex",
-                          justifyContent: "center",
-                          borderRadius: "12px", // Rounded corners for the box
+                          color: "white",
+                          textAlign: "right",
+                          fontSize: isMobile ? "2rem" : "2.5rem",
+                          position: "absolute",
+                          bottom: "10px",
+                          right: "10px",
                         }}
                       >
-                        <WeatherIcon type={parsedWeatherData.weather[0].main} />
-                        <Typography
-                          variant="body3"
-                          sx={{
-                            color: "white",
-                            ml: 2,
-                            fontSize: "2rem",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          {parsedWeatherData.weather[0].description.toUpperCase()}
-                        </Typography>
-                      </Box>
+                        {parsedWeatherData.main.temp}°c
+                      </Typography>
                     )}
-                    <Grid item xs={12}>
-                      <Box
-                        sx={{
-                          display: "flex", // Set display to flex to use flexbox properties
-                          flexDirection: "column", // Stack children vertically
-                          justifyContent: "center", // Center the items vertically
-                          alignItems: "center", // Center the items horizontally
-                          height: "100%", // Take up full height of its container
-                          width: "100%", // Take up full width of its container
-                        }}
-                      >
-                        <Autocomplete
-                          freeSolo
-                          disableClearable
-                          options={options?.map((option) => {
-                            return option;
-                          })}
-                          getOptionLabel={(option) =>
-                            typeof option === "string"
-                              ? option
-                              : option.label || ""
-                          }
-                          onInputChange={handleInputChange}
-                          onChange={handleOptionsChange}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Search Location"
-                              margin="normal"
-                              variant="outlined"
-                              fullWidth
-                              InputProps={{
-                                ...params.InputProps,
-                                type: "search",
-                                style: {
-                                  fontSize: "1rem",
-                                  color: "white",
-                                  backgroundColor: "black",
-                                },
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <IconButton onClick={handleSubmit}>
-                                      <SearchIcon style={{ color: "white" }} />
-                                    </IconButton>
-                                  </InputAdornment>
-                                ),
-                              }}
-                              InputLabelProps={{
-                                style: {
-                                  fontSize: "1rem",
-                                  backgroundColor: "black",
-                                  color: "white",
-                                },
-                              }}
-                              style={{
-                                width: "100%",
-                                maxWidth: "100%",
-                                fontSize: "1.25rem",
-                              }}
-                              onKeyDown={handleKeyDown}
-                            />
-                          )}
-                          sx={{ width: isMobile ? "90%" : "70%"}}
-                        />
-                      </Box>
-                    </Grid>
+                  </Box>
+                </Box>
 
-                    {parsedWeatherData && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    flexDirection: isMobile ? "column" : "row",
+                  }}
+                >
+                  <Autocomplete
+                    freeSolo
+                    disableClearable
+                    options={options?.map((option) => option)}
+                    getOptionLabel={(option) =>
+                      typeof option === "string" ? option : option.label || ""
+                    }
+                    onInputChange={handleInputChange}
+                    onChange={handleOptionsChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Search Location"
+                        margin="normal"
+                        variant="outlined"
+                        fullWidth
+                        InputProps={{
+                          ...params.InputProps,
+                          type: "search",
+                          style: {
+                            fontSize: "1rem",
+                            color: "white",
+                            backgroundColor: "black",
+                          },
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={handleSubmit}>
+                                <SearchIcon style={{ color: "white" }} />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                        InputLabelProps={{
+                          style: {
+                            fontSize: "1rem",
+                            backgroundColor: "black",
+                            color: "white",
+                          },
+                        }}
+                        onKeyDown={handleKeyDown}
+                      />
+                    )}
+                    sx={{
+                      width: isMobile ? "100%" : "50%", // Adjust width based on screen size
+                      mr: isMobile ? 0 : 2, // Margin right for spacing in non-mobile view
+                    }}
+                  />
+                </Box>
+
+                {parsedWeatherData && (
+                  <Grid container spacing={2} sx={{ mt: isMobile ? 0 : 0 }}>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <WeatherElementBox
+                        icon={ThermostatAutoIcon}
+                        label="Feels like"
+                        value={`${parsedWeatherData.main.feels_like}°C`}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <WeatherElementBox
+                        icon={Compress}
+                        label="Pressure"
+                        value={`${parsedWeatherData.main.pressure} hpa`}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <WeatherElementBox
+                        icon={() => (
+                          <ThermostatIcon
+                            sx={{ color: "skyblue", fontSize: "3rem" }}
+                          />
+                        )}
+                        label="Min Temp"
+                        value={`${parsedWeatherData.main.temp_min}°C`}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <WeatherElementBox
+                        icon={() => (
+                          <ThermostatIcon
+                            sx={{ color: "red", fontSize: "3rem" }}
+                          />
+                        )}
+                        label="Max Temp"
+                        value={`${parsedWeatherData.main.temp_max}°C`}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <WeatherElementBox
+                        icon={WaterDropIcon}
+                        label="Humidity"
+                        value={`${parsedWeatherData.main.humidity}%`}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <WeatherElementBox
+                        icon={WindPowerIcon}
+                        label="Wind Speed"
+                        value={`${(
+                          parsedWeatherData.wind.speed * 3.6
+                        ).toFixed()} km/h`}
+                      />
+                    </Grid>
+                  </Grid>
+                )}
+                {parsedWeatherData && (
+                  <Box>
+                    <Button
+                      onClick={() => setShowMoreDetails(!showMoreDetails)}
+                      variant="contained"
+                      color="primary"
+                      sx={{ mt: 3 }}
+                    >
+                      {showMoreDetails ? "Less Details" : "More Details"}
+                    </Button>
+                    <Collapse in={showMoreDetails}>
                       <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={ThermostatAutoIcon}
-                            label="Feels like"
-                            value={`${parsedWeatherData.main.feels_like}°C`}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={Compress}
-                            label="Pressure"
-                            value={`${parsedWeatherData.main.pressure} hpa`}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={() => (
-                              <ThermostatIcon
-                                sx={{ color: "skyblue", fontSize: "3rem" }}
-                              />
-                            )}
-                            label="Min Temp"
-                            value={`${parsedWeatherData.main.temp_min}°C`}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={() => (
-                              <ThermostatIcon
-                                sx={{ color: "red", fontSize: "3rem" }}
-                              />
-                            )}
-                            label="Max Temp"
-                            value={`${parsedWeatherData.main.temp_max}°C`}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={WaterDropIcon}
-                            label="Humidity"
-                            value={`${parsedWeatherData.main.humidity}%`}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={WindPowerIcon}
-                            label="Wind Speed"
-                            value={`${(
-                              parsedWeatherData.wind.speed * 3.6
-                            ).toFixed()} km/h`}
-                          />
-                        </Grid>
                         <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={Loop}
@@ -575,7 +595,7 @@ const Weather = () => {
                             )}`}
                           />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={6} sx={{ mb: 3 }}>
+                        <Grid item xs={12} sm={6} md={6}>
                           <WeatherElementBox
                             icon={WbTwilight}
                             label="Sunset"
@@ -585,11 +605,11 @@ const Weather = () => {
                           />
                         </Grid>
                       </Grid>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
+                    </Collapse>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
           </Container>
         </Box>
       )}
