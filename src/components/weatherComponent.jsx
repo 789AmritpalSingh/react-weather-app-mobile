@@ -330,26 +330,17 @@ const Weather = () => {
           flexDirection="column"
         >
           <Container maxWidth="lg">
-            <Card
+            <Box
               sx={{
                 opacity: 1,
                 padding: "20px",
                 mt: 3,
-                backgroundColor: "rgba(50, 50, 50, 0.8)", // Overall gray background with opacity
                 height: "auto",
                 mb: 2,
                 maxHeight: "90vh", // Limit height to make it scrollable
                 overflowY: "auto", // Enable vertical scrolling
               }}
             >
-              <CardContent
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  height: "100%",
-                }}
-              >
                 <Box
                   sx={{
                     display: "flex",
@@ -641,8 +632,7 @@ const Weather = () => {
                     </Modal>
                   </Box>
                 )}
-              </CardContent>
-            </Card>
+            </Box>
           </Container>
         </Box>
       )}
