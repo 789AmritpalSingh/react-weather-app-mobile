@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error"; // Importing ErrorIcon
 import weatherIconGIF from "./images/WeatherIcons.gif"; // Importing the forecast image
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Alert,
   Autocomplete,
@@ -8,11 +9,11 @@ import {
   Button,
   Card,
   CardContent,
-  Collapse,
   Container,
   Grid,
   IconButton,
   InputAdornment,
+  Modal,
   Paper,
   Snackbar,
   TextField,
@@ -27,7 +28,6 @@ import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import WindPowerIcon from "@mui/icons-material/WindPower";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Brightness7, Compress, Loop, WbTwilight } from "@mui/icons-material";
-import WeatherIcon from "./weatherIcons";
 import SearchIcon from "@mui/icons-material/Search"; // Importing the search icon
 import {
   fetchCoordsByCity,
@@ -308,7 +308,7 @@ const Weather = () => {
               style={{ width: "100%" }}
             />
             <Typography variant="h6">
-              To view weather information, please enable location access.
+              Loading the weather information...
             </Typography>
 
             {isLocationBlocked && (
@@ -337,7 +337,7 @@ const Weather = () => {
                 mt: 3,
                 backgroundColor: "rgba(50, 50, 50, 0.8)", // Overall gray background with opacity
                 height: "auto",
-                mb: 1,
+                mb: 2,
                 maxHeight: "90vh", // Limit height to make it scrollable
                 overflowY: "auto", // Enable vertical scrolling
               }}
@@ -377,7 +377,7 @@ const Weather = () => {
                       sx={{
                         display: "flex",
                         alignItems: "flex-start", // Adjust alignment to move the description up
-                        mt: 2
+                        mt: 2,
                       }}
                     >
                       <Typography
@@ -385,7 +385,7 @@ const Weather = () => {
                         sx={{
                           color: "white",
                           mr: 2,
-                          fontSize: isMobile ? "1.2rem" : '2rem',
+                          fontSize: isMobile ? "1.2rem" : "2rem",
                         }}
                       >
                         {parsedWeatherData.weather[0].description.toUpperCase()}
@@ -396,7 +396,7 @@ const Weather = () => {
                         top: "20px",
                         right: "20px",
                         textAlign: "right",
-                        mb: isMobile ? 2 : 5,
+                        mb: 2,
                       }}
                     >
                       <Typography
@@ -432,10 +432,10 @@ const Weather = () => {
                         sx={{
                           color: "white",
                           textAlign: "right",
-                          fontSize: isMobile ? "2rem" : "2.5rem",
+                          fontSize: isMobile ? "1.5rem" : "2.5rem",
                           position: "absolute",
                           bottom: "10px",
-                          right: "10px",
+                          right: isMobile ? "0px" : "10px",
                         }}
                       >
                         {parsedWeatherData.main.temp}°c
@@ -504,21 +504,14 @@ const Weather = () => {
 
                 {parsedWeatherData && (
                   <Grid container spacing={2} sx={{ mt: isMobile ? 0 : 0 }}>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={6}>
                       <WeatherElementBox
                         icon={ThermostatAutoIcon}
                         label="Feels like"
                         value={`${parsedWeatherData.main.feels_like}°C`}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                      <WeatherElementBox
-                        icon={Compress}
-                        label="Pressure"
-                        value={`${parsedWeatherData.main.pressure} hpa`}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={6}>
                       <WeatherElementBox
                         icon={() => (
                           <ThermostatIcon
@@ -529,7 +522,7 @@ const Weather = () => {
                         value={`${parsedWeatherData.main.temp_min}°C`}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={6}>
                       <WeatherElementBox
                         icon={() => (
                           <ThermostatIcon
@@ -540,20 +533,11 @@ const Weather = () => {
                         value={`${parsedWeatherData.main.temp_max}°C`}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={6}>
                       <WeatherElementBox
                         icon={WaterDropIcon}
                         label="Humidity"
                         value={`${parsedWeatherData.main.humidity}%`}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                      <WeatherElementBox
-                        icon={WindPowerIcon}
-                        label="Wind Speed"
-                        value={`${(
-                          parsedWeatherData.wind.speed * 3.6
-                        ).toFixed()} km/h`}
                       />
                     </Grid>
                   </Grid>
@@ -561,51 +545,100 @@ const Weather = () => {
                 {parsedWeatherData && (
                   <Box>
                     <Button
-                      onClick={() => setShowMoreDetails(!showMoreDetails)}
+                      onClick={() => setShowMoreDetails(true)}
                       variant="contained"
                       color="primary"
-                      sx={{ mt: 3 }}
+                      sx={{ mt: 2 }}
                     >
                       {showMoreDetails ? "Less Details" : "More Details"}
                     </Button>
-                    <Collapse in={showMoreDetails}>
-                      <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={Loop}
-                            label="Wind Direction"
-                            value={`${convertDegreesToCompass(
-                              parsedWeatherData.wind.deg
-                            )}`}
-                          />
+                    <Modal
+                      open={showMoreDetails}
+                      onClose={() => {
+                        setShowMoreDetails(false);
+                      }}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          backgroundColor: "rgba(50, 50, 50, 0.8)",
+                          padding: 4,
+                          borderRadius: 2,
+                          width: isMobile ? "60%" : "40%",
+                          maxHeight: "90vh",
+                          overflowY: "auto",
+                          position: "relative", // Ensure positioning for the close button
+                        }}
+                      >
+                        <IconButton
+                          onClick={() => setShowMoreDetails(false)}
+                          sx={{
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            color: "white"
+                          }}
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                        <Grid container spacing={2}>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <WeatherElementBox
+                              icon={Loop}
+                              label="Wind Direction"
+                              value={`${convertDegreesToCompass(
+                                parsedWeatherData.wind.deg
+                              )}`}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <WeatherElementBox
+                              icon={VisibilityIcon}
+                              label="Visibility"
+                              value={`${parsedWeatherData.visibility}m`}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <WeatherElementBox
+                              icon={Brightness7}
+                              label="Sunrise"
+                              value={`${formatTime(
+                                parsedWeatherData.sys.sunrise
+                              )}`}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <WeatherElementBox
+                              icon={WbTwilight}
+                              label="Sunset"
+                              value={`${formatTime(
+                                parsedWeatherData.sys.sunset
+                              )}`}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <WeatherElementBox
+                              icon={Compress}
+                              label="Pressure"
+                              value={`${parsedWeatherData.main.pressure} hpa`}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <WeatherElementBox
+                              icon={WindPowerIcon}
+                              label="Wind Speed"
+                              value={`${(
+                                parsedWeatherData.wind.speed * 3.6
+                              ).toFixed()} km/h`}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={VisibilityIcon}
-                            label="Visibility"
-                            value={`${parsedWeatherData.visibility}m`}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={Brightness7}
-                            label="Sunrise"
-                            value={`${formatTime(
-                              parsedWeatherData.sys.sunrise
-                            )}`}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                          <WeatherElementBox
-                            icon={WbTwilight}
-                            label="Sunset"
-                            value={`${formatTime(
-                              parsedWeatherData.sys.sunset
-                            )}`}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Collapse>
+                      </Box>
+                    </Modal>
                   </Box>
                 )}
               </CardContent>
