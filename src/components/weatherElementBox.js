@@ -27,6 +27,7 @@ const WeatherElementBox = ({ icon: IconComponent, label, value }) => {
         boxShadow: 1,
         minHeight: isMobileSize ? "70px" : "90px", // Set a consistent minHeight
         minWidth: '0', // Ensures that the flex items don't overflow the container
+        height: "100%", // Ensures that all boxes have the same height
       }}
     >
       <IconComponent sx={{ color: getIconColor(label), fontSize: isMobileSize ? "1.5rem" : "2.5rem" }} />

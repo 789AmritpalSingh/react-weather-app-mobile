@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ErrorIcon from "@mui/icons-material/Error"; // Importing ErrorIcon
 import weatherIconGIF from "./images/WeatherIcons.gif"; // Importing the forecast image
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Alert,
   Autocomplete,
@@ -213,7 +213,7 @@ const Weather = () => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center center",
         minHeight: "100vh",
-        overflow: "hidden",      
+        overflow: "hidden",
       }}
     >
       <Snackbar
@@ -327,6 +327,9 @@ const Weather = () => {
           alignItems="center"
           minHeight="100vh"
           flexDirection="column"
+          sx={{
+            mt: -4, // Reduce the margin from the top, adjust this value as needed
+          }}
         >
           <Container maxWidth="lg">
             <Box
@@ -338,291 +341,302 @@ const Weather = () => {
                 overflowY: "auto", // Enable vertical scrolling
               }}
             >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  backgroundImage: `url(${setBackgroundImage()})`, // Background image for the top section
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  padding: "20px",
+                  borderRadius: "12px",
+                  mb: isMobile ? 0 : 1, // Margin bottom to separate from other sections
+                  position: "relative", // To allow absolute positioning of child elements
+                }}
+              >
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    textAlign: "center",
-                    backgroundImage: `url(${setBackgroundImage()})`, // Background image for the top section
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    padding: "20px",
-                    borderRadius: "12px",
-                    mb: isMobile ? 0 : 1, // Margin bottom to separate from other sections
-                    position: "relative", // To allow absolute positioning of child elements
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      width: "100%",
-                      mt: 2,
-                      position: "relative",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "flex-start", // Adjust alignment to move the description up
-                        mt: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="body3"
-                        sx={{
-                          color: "white",
-                          mr: 2,
-                          fontSize: isMobile ? "1.2rem" : "2rem",
-                        }}
-                      >
-                        {parsedWeatherData.weather[0].description.toUpperCase()}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        top: "20px",
-                        right: "20px",
-                        textAlign: "right",
-                        mb: 10,
-                      }}
-                    >
-                      <Typography
-                        variant={isMobile ? "h4" : "h3"}
-                        component="h2"
-                        sx={{ color: "white" }}
-                      >
-                        {parsedWeatherData?.name}
-                      </Typography>
-                      <Typography
-                        variant={isMobile ? "h5" : "h4"}
-                        component="h2"
-                        sx={{ color: "white" }}
-                      >
-                        {parsedWeatherData?.sys.country}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      width: "100%",
-                      mt: 2,
-                      position: "relative",
-                    }}
-                  >
-                    <DigitalClock timeZone={parsedWeatherData?.timezone} />
-                    {parsedWeatherData && (
-                      <Typography
-                        variant="h3"
-                        component="h2"
-                        sx={{
-                          color: "white",
-                          textAlign: "right",
-                          fontSize: isMobile ? "1.5rem" : "2.5rem",
-                          position: "absolute",
-                          bottom: "10px",
-                          right: isMobile ? "0px" : "10px",
-                        }}
-                      >
-                        {parsedWeatherData.main.temp}°c
-                      </Typography>
-                    )}
-                  </Box>
-                </Box>
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    justifyContent: "space-between",
                     width: "100%",
-                    flexDirection: isMobile ? "column" : "row",
+                    mt: 2,
+                    position: "relative",
                   }}
                 >
-                  <Autocomplete
-                    freeSolo
-                    disableClearable
-                    options={options?.map((option) => option)}
-                    getOptionLabel={(option) =>
-                      typeof option === "string" ? option : option.label || ""
-                    }
-                    onInputChange={handleInputChange}
-                    onChange={handleOptionsChange}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Search Location"
-                        margin="normal"
-                        variant="outlined"
-                        fullWidth
-                        InputProps={{
-                          ...params.InputProps,
-                          type: "search",
-                          style: {
-                            fontSize: "1rem",
-                            color: "white",
-                            backgroundColor: "black",
-                          },
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton onClick={handleSubmit}>
-                                <SearchIcon style={{ color: "white" }} />
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                        InputLabelProps={{
-                          style: {
-                            fontSize: "1rem",
-                            backgroundColor: "black",
-                            color: "white",
-                          },
-                        }}
-                        onKeyDown={handleKeyDown}
-                      />
-                    )}
+                  <Box
                     sx={{
-                      width: isMobile ? "100%" : "50%", // Adjust width based on screen size
-                      mr: isMobile ? 0 : 2, // Margin right for spacing in non-mobile view
+                      display: "flex",
+                      alignItems: "flex-start", // Adjust alignment to move the description up
+                      mt: 2,
                     }}
-                  />
-                </Box>
-
-                {parsedWeatherData && (
-                  <Grid container spacing={2} sx={{ mt: isMobile ? 0 : 0 }}>
-                    <Grid item xs={6} sm={3} md={3}>
-                      <WeatherElementBox
-                        icon={ThermostatAutoIcon}
-                        label="Feels like"
-                        value={`${parsedWeatherData.main.feels_like}°C`}
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={3} md={3}>
-                      <WeatherElementBox
-                        icon={ThermostatIcon}
-                        label="Min Temp"
-                        value={`${parsedWeatherData.main.temp_min}°C`}
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={3} md={3}>
-                      <WeatherElementBox
-                        icon={ThermostatIcon}
-                        label="Max Temp"
-                        value={`${parsedWeatherData.main.temp_max}°C`}
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={3} md={3}>
-                      <WeatherElementBox
-                        icon={WaterDropIcon}
-                        label="Humidity"
-                        value={`${parsedWeatherData.main.humidity}%`}
-                      />
-                    </Grid>
-                  </Grid>
-                )}
-                {parsedWeatherData && (
-                  <Box>
-                    <Button
-                      onClick={() => setShowMoreDetails(true)}
-                      variant="contained"
-                      color="primary"
-                      sx={{ mt: 2 }}
-                    >
-                      {showMoreDetails ? "Less Details" : "More Details"}
-                    </Button>
-                    <Modal
-                      open={showMoreDetails}
-                      onClose={() => {
-                        setShowMoreDetails(false);
-                      }}
+                  >
+                    <Typography
+                      variant="body3"
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        color: "white",
+                        mr: 2,
+                        fontSize: isMobile ? "1.2rem" : "2rem",
                       }}
                     >
-                      <Box
+                      {parsedWeatherData.weather[0].description.toUpperCase()}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      top: "20px",
+                      right: "20px",
+                      textAlign: "right",
+                      mb: 10,
+                    }}
+                  >
+                    <Typography
+                      variant={isMobile ? "h4" : "h3"}
+                      component="h2"
+                      sx={{ color: "white" }}
+                    >
+                      {parsedWeatherData?.name}
+                    </Typography>
+                    <Typography
+                      variant={isMobile ? "h5" : "h4"}
+                      component="h2"
+                      sx={{ color: "white" }}
+                    >
+                      {parsedWeatherData?.sys.country}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    mt: 2,
+                    position: "relative",
+                  }}
+                >
+                  <DigitalClock timeZone={parsedWeatherData?.timezone} />
+                  {parsedWeatherData && (
+                    <Typography
+                      variant="h3"
+                      component="h2"
+                      sx={{
+                        color: "white",
+                        textAlign: "right",
+                        fontSize: isMobile ? "1.5rem" : "2.5rem",
+                        position: "absolute",
+                        bottom: "10px",
+                        right: isMobile ? "0px" : "10px",
+                      }}
+                    >
+                      {parsedWeatherData.main.temp}°c
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  flexDirection: isMobile ? "column" : "row",
+                }}
+              >
+                <Autocomplete
+                  freeSolo
+                  disableClearable
+                  options={options?.map((option) => option)}
+                  getOptionLabel={(option) =>
+                    typeof option === "string" ? option : option.label || ""
+                  }
+                  onInputChange={handleInputChange}
+                  onChange={handleOptionsChange}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Search Location"
+                      margin="normal"
+                      variant="outlined"
+                      fullWidth
+                      InputProps={{
+                        ...params.InputProps,
+                        type: "search",
+                        style: {
+                          fontSize: "1rem",
+                          color: "white",
+                          backgroundColor: "black",
+                          borderRadius: "20px", // Increase the border radius
+                        },
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton onClick={handleSubmit}>
+                              <SearchIcon style={{ color: "white" }} />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      InputLabelProps={{
+                        style: {
+                          fontSize: "1rem",
+                          backgroundColor: "black",
+                          color: "white",
+                        },
+                      }}
+                      onKeyDown={handleKeyDown}
+                    />
+                  )}
+                  sx={{
+                    width: isMobile ? "100%" : "50%", // Adjust width based on screen size
+                    mr: isMobile ? 0 : 2, // Margin right for spacing in non-mobile view
+                  }}
+                />
+              </Box>
+
+              {parsedWeatherData && (
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{ mt: isMobile ? 0 : 0 }}
+                >
+                  <Grid item xs={6} sm={3} md={3} >
+                    <WeatherElementBox
+                      icon={ThermostatAutoIcon}
+                      label="Feels like"
+                      value={`${parsedWeatherData.main.feels_like}°C`}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={3} md={3} >
+                    <WeatherElementBox
+                      icon={ThermostatIcon}
+                      label="Min Temp"
+                      value={`${parsedWeatherData.main.temp_min}°C`}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={3} md={3} >
+                    <WeatherElementBox
+                      icon={ThermostatIcon}
+                      label="Max Temp"
+                      value={`${parsedWeatherData.main.temp_max}°C`}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={3} md={3} >
+                    <WeatherElementBox
+                      icon={WaterDropIcon}
+                      label="Humidity"
+                      value={`${parsedWeatherData.main.humidity}%`}
+                    />
+                  </Grid>
+                </Grid>
+              )}
+              {parsedWeatherData && (
+                <Box>
+                  <Button
+                    onClick={() => setShowMoreDetails(true)}
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      mt: 3,
+                      padding: "5px 12px", // Adjust the padding to increase the size
+                      fontSize: "1.25rem", // Increase the font size
+                      minWidth: "150px", // Set a minimum width for the button
+                    }}
+                  >
+                    {showMoreDetails ? "Less Details" : "More Details"}
+                  </Button>
+                  <Modal
+                    open={showMoreDetails}
+                    onClose={() => {
+                      setShowMoreDetails(false);
+                    }}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      mt: isMobile ? 10 : 0,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        backgroundColor: "rgba(50, 50, 50, 0.8)",
+                        padding: 4,
+                        borderRadius: 2,
+                        width: isMobile ? "60%" : "50%",
+                        maxHeight: "90vh",
+                        overflowY: "auto",
+                        position: "relative", // Ensure positioning for the close button
+                      }}
+                    >
+                      <IconButton
+                        onClick={() => setShowMoreDetails(false)}
                         sx={{
-                          backgroundColor: "rgba(50, 50, 50, 0.8)",
-                          padding: 4,
-                          borderRadius: 2,
-                          width: isMobile ? "60%" : "40%",
-                          maxHeight: "90vh",
-                          overflowY: "auto",
-                          position: "relative", // Ensure positioning for the close button
+                          position: "absolute",
+                          top: 8,
+                          right: 8,
+                          color: "white",
                         }}
                       >
-                        <IconButton
-                          onClick={() => setShowMoreDetails(false)}
-                          sx={{
-                            position: "absolute",
-                            top: 8,
-                            right: 8,
-                            color: "white"
-                          }}
-                        >
-                          <CloseIcon />
-                        </IconButton>
-                        <Grid container spacing={2}>
-                          <Grid item xs={6} sm={4} md={4}>
-                            <WeatherElementBox
-                              icon={Loop}
-                              label="Wind Direction"
-                              value={`${convertDegreesToCompass(
-                                parsedWeatherData.wind.deg
-                              )}`}
-                            />
-                          </Grid>
-                          <Grid item xs={6} sm={4} md={4}>
-                            <WeatherElementBox
-                              icon={VisibilityIcon}
-                              label="Visibility"
-                              value={`${parsedWeatherData.visibility}m`}
-                            />
-                          </Grid>
-                          <Grid item xs={6} sm={4} md={4}>
-                            <WeatherElementBox
-                              icon={Brightness7}
-                              label="Sunrise"
-                              value={`${formatTime(
-                                parsedWeatherData.sys.sunrise
-                              )}`}
-                            />
-                          </Grid>
-                          <Grid item xs={6} sm={4} md={4}>
-                            <WeatherElementBox
-                              icon={WbTwilight}
-                              label="Sunset"
-                              value={`${formatTime(
-                                parsedWeatherData.sys.sunset
-                              )}`}
-                            />
-                          </Grid>
-                          <Grid item xs={6} sm={4} md={4}>
-                            <WeatherElementBox
-                              icon={Compress}
-                              label="Pressure"
-                              value={`${parsedWeatherData.main.pressure} hpa`}
-                              isMobile
-                            />
-                          </Grid>
-                          <Grid item xs={6} sm={4} md={4}>
-                            <WeatherElementBox
-                              icon={WindPowerIcon}
-                              label="Wind Speed"
-                              value={`${(
-                                parsedWeatherData.wind.speed * 3.6
-                              ).toFixed()} km/h`}
-                              isMobile
-                            />
-                          </Grid>
+                        <CloseIcon />
+                      </IconButton>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6} md={6}>
+                          <WeatherElementBox
+                            icon={Loop}
+                            label="Wind Direction"
+                            value={`${convertDegreesToCompass(
+                              parsedWeatherData.wind.deg
+                            )}`}
+                          />
                         </Grid>
-                      </Box>
-                    </Modal>
-                  </Box>
-                )}
+                        <Grid item xs={12} sm={6} md={6}>
+                          <WeatherElementBox
+                            icon={VisibilityIcon}
+                            label="Visibility"
+                            value={`${parsedWeatherData.visibility}m`}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={6}>
+                          <WeatherElementBox
+                            icon={Brightness7}
+                            label="Sunrise"
+                            value={`${formatTime(
+                              parsedWeatherData.sys.sunrise
+                            )}`}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={6}>
+                          <WeatherElementBox
+                            icon={WbTwilight}
+                            label="Sunset"
+                            value={`${formatTime(
+                              parsedWeatherData.sys.sunset
+                            )}`}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={6}>
+                          <WeatherElementBox
+                            icon={Compress}
+                            label="Pressure"
+                            value={`${parsedWeatherData.main.pressure} hpa`}
+                            isMobile
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={6}>
+                          <WeatherElementBox
+                            icon={WindPowerIcon}
+                            label="Wind Speed"
+                            value={`${(
+                              parsedWeatherData.wind.speed * 3.6
+                            ).toFixed()} km/h`}
+                            isMobile
+                          />
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Modal>
+                </Box>
+              )}
             </Box>
           </Container>
         </Box>
